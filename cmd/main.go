@@ -1,7 +1,7 @@
 package main
 
-import "fmt"
+import "github.com/TrashWithNoLid/FyteColor/pkg/test"
 
 func main() {
-	fmt.Println("Hello World!")
+	test.SayHello()
 }
