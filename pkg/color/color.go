@@ -29,6 +29,18 @@ var (
 	curColor color = Def
 )
 
+//ColoredPart provides information for ColoredString
+type ColoredPart struct {
+	partColor  color
+	partString string
+}
+
+//ColoredString represents a colored string
+type ColoredString struct {
+	rawString   string
+	stringParts []ColoredPart
+}
+
 //SetColor sets the current color for string building
 func SetColor(newColor color) {
 	curColor = newColor
