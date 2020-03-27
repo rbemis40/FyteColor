@@ -9,11 +9,12 @@ import (
 func main() {
 	coloredString := fytecolor.NewColoredString([]fytecolor.ColoredPart{
 		fytecolor.ColoredPart{
-			PartColor:  fytecolor.Red,
+			PartColor:  fytecolor.BrightRed,
+			PartStyle:  fytecolor.Underlined,
 			PartString: "Hello ",
 		},
 		fytecolor.ColoredPart{
-			PartColor:  fytecolor.Blue,
+			PartColor:  fytecolor.BrightBlue,
 			PartString: "World!",
 		},
 	})

@@ -5,35 +5,25 @@ import "fmt"
 //ColoredPart represents a part of a ColoredString
 type ColoredPart struct {
 	PartColor  color
+	PartStyle  style
 	PartString string
 }
 
 //ColoredString represents a string with colored elements
 type ColoredString struct {
-	rawString    string
-	coloredParts []ColoredPart
+	rawString       string
+	formattedString string
+	coloredParts    []ColoredPart
 }
 
 //String returns the raw string of a ColoredString
-func (cs ColoredString) String() string {
+func (cs *ColoredString) String() string {
 	return fmt.Sprint(cs.rawString)
 }
 
 //ColorString returns the fully formatted colored string
-func (cs ColoredString) ColorString() string {
-	var colorString string = ""
-	for _, cp := range cs.coloredParts {
-		ansiStr, ok := ColorMap[cp.PartColor]
-		if ok {
-			colorString += ansiStr + cp.PartString
-		} else {
-			colorString += cp.PartString
-		}
-	}
-
-	colorString += ColorMap[ColorDef]
-
-	return colorString
+func (cs *ColoredString) ColorString() string {
+	return cs.formattedString
 }
 
 //NewColoredString returns a fully formed ColoredString
@@ -43,8 +33,37 @@ func NewColoredString(colorParts []ColoredPart) ColoredString {
 		rawString += cp.PartString
 	}
 
-	return ColoredString{
-		rawString,
-		colorParts,
+	newString := ColoredString{
+		rawString:    rawString,
+		coloredParts: colorParts,
 	}
+
+	newString.translateColorData()
+
+	return newString
+}
+
+//Translates the raw []ColoredPart to a single formatted string
+func (cs *ColoredString) translateColorData() {
+	var colorString string = ""
+	for _, cp := range cs.coloredParts {
+		clrStr, ok := ColorMap[cp.PartColor]
+		if ok {
+			colorString += clrStr
+		} else {
+			colorString += ColorMap[ColorDef]
+		}
+
+		styleStr, ok := StyleMap[cp.PartStyle]
+		if ok {
+			colorString += styleStr
+		} else {
+			colorString += StyleMap[StyleDef]
+		}
+
+		colorString += cp.PartString
+	}
+
+	colorString += ColorMap[ColorDef]
+	cs.formattedString = colorString
 }
