@@ -1,5 +1,7 @@
 package color
 
+import "fmt"
+
 type color int
 
 var (
@@ -29,5 +31,15 @@ var (
 
 //SetColor sets the current color for string building
 func SetColor(newColor color) {
+	curColor = newColor
+}
 
+//BuildStr builds the input string, adding color as needed
+func BuildStr(str string) (string, error) {
+	colorANSI, ok := colorStr[curColor]
+	if !ok {
+		return str, fmt.Errorf("BuildStr: error building str '%s', color '%v' is not defined", str, curColor)
+	}
+
+	return colorANSI + str, nil
 }
