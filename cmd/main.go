@@ -1,7 +1,7 @@
 package main
 
-import "github.com/TrashWithNoLid/FyteColor/pkg/test"
+import "github.com/TrashWithNoLid/FyteColor/pkg/color"
 
 func main() {
-	test.SayHello()
+	color.SetColor(color.Def)
 }
