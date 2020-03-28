@@ -1,6 +1,8 @@
 package color
 
-import "fmt"
+import (
+	"fmt"
+)
 
 //ColoredPart represents a part of a ColoredString
 type ColoredPart struct {
@@ -43,20 +45,85 @@ func NewColoredString(colorParts []ColoredPart) ColoredString {
 	return newString
 }
 
+//NewFormattedStr creates a colored string from a printf style str
+func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, error) {
+	var isNegated bool = false
+	var curString string = ""
+
+	partStr := make([]string, 0, 3)
+
+	for i := 0; i < len(fStr); { //Loop through the format string to detect %!
+
+		if fStr[i] == '\\' { //Check if negation is needed
+			if isNegated { //If already negated, print the missed backslash, but keep negation
+				curString += "\\"
+			} else { //If not already negated, set the negation to true, but don't print the backslash in case it is negating the color code
+				isNegated = true
+			}
+		} else { //The current character is not a negative one
+			if len(fStr)-i >= 2 && fStr[i:i+2] == "%!" { //Before proceeding, check if the color code specifier is present
+				if isNegated { //If it is and negated, remove the negation and print the characters
+					isNegated = false
+				} else { //If not negated, store the previous characters, as they will be differently colored
+					partStr = append(partStr, curString) //Add the current str to the slice, this is the part that will be uniquely colored
+					curString = ""                       //Reset the current string
+
+					i += 2   //Since already found, skip pass the next two characters
+					continue //Dont add the characters to the new curString
+				}
+			} else { //The color specifier was not found
+				if isNegated { //If it is negated but not a color specifier, than set negation back to false and add the backslashe for later formatting
+					isNegated = false
+					curString += "\\"
+				}
+			}
+
+			curString += string(fStr[i]) //Add the character to the current string
+		}
+
+		i++ //Change the current string index
+	}
+
+	partStr = append(partStr, curString)
+
+	if argLen := len(formatArgs); argLen < len(partStr)-1 { //Subtract 1, as there is always at least one string
+		return ColoredString{}, fmt.Errorf("not enough arguments passed to NewFormattedStr, only received %d", argLen)
+	}
+
+	colorPartSlice := make([]ColoredPart, 1, 3)
+	colorPartSlice[0] = ColoredPart{
+		PartString: partStr[0],
+	}
+
+	for i, curPartStr := range partStr[1:] {
+		t, ok := formatArgs[i].(color)
+		if !ok {
+			return ColoredString{}, fmt.Errorf("argument %d of formatArgs was of the wrong type '%T' (hint: color arguments must be first)", i, formatArgs[i])
+		}
+
+		colorPartSlice = append(colorPartSlice, ColoredPart{
+			PartColor:  t,
+			PartString: curPartStr,
+		})
+	}
+
+	return NewColoredString(colorPartSlice), nil
+}
+
 //Translates the raw []ColoredPart to a single formatted string
 func (cs *ColoredString) translateColorData() {
 	var colorString string = ""
 	for _, cp := range cs.coloredParts {
-		clrStr, ok := ColorMap[cp.PartColor]
+		ansiStr, ok := ColorMap[cp.PartColor]
 		if ok {
-			colorString += clrStr
+			colorString += ansiStr
 		} else {
 			colorString += ColorMap[ColorDef]
 		}
 
-		styleStr, ok := StyleMap[cp.PartStyle]
+		ansiStr, ok = StyleMap[cp.PartStyle]
 		if ok {
-			colorString += styleStr
+			colorString += ansiStr
 		} else {
 			colorString += StyleMap[StyleDef]
 		}
