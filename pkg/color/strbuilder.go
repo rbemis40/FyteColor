@@ -45,7 +45,7 @@ func NewColoredString(colorParts []ColoredPart) ColoredString {
 	return newString
 }
 
-//NewFormattedStr creates a colored string from a printf style str
+//NewFormattedStr creates a colored string from a printf style string, COLOR ARGUMENTS MUST COME FIRST
 func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, error) {
 	var isNegated bool = false
 	var curString string = ""
@@ -107,7 +107,10 @@ func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, err
 		})
 	}
 
-	return NewColoredString(colorPartSlice), nil
+	partialColoredStr := NewColoredString(colorPartSlice)
+	partialColoredStr.formattedString = fmt.Sprintf(partialColoredStr.formattedString, formatArgs[len(partStr)-1:]...)
+
+	return partialColoredStr, nil
 }
 
 //Translates the raw []ColoredPart to a single formatted string
