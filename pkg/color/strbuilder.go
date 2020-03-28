@@ -45,7 +45,9 @@ func NewColoredString(colorParts []ColoredPart) ColoredString {
 	return newString
 }
 
-//NewFormattedStr creates a colored string from a printf style string, COLOR ARGUMENTS MUST COME FIRST
+//NewFormattedStr creates a colored string from a printf style string
+//
+//- **Note:** Color based arguments must come before printf arguments
 func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, error) {
 	var isNegated bool = false
 	var curString string = ""
@@ -60,7 +62,7 @@ func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, err
 			} else { //If not already negated, set the negation to true, but don't print the backslash in case it is negating the color code
 				isNegated = true
 			}
-		} else { //The current character is not a negative one
+		} else { //The current character is not negative
 			if len(fStr)-i >= 2 && fStr[i:i+2] == "%!" { //Before proceeding, check if the color code specifier is present
 				if isNegated { //If it is and negated, remove the negation and print the characters
 					isNegated = false
@@ -111,6 +113,21 @@ func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, err
 	partialColoredStr.formattedString = fmt.Sprintf(partialColoredStr.formattedString, formatArgs[len(partStr)-1:]...)
 
 	return partialColoredStr, nil
+}
+
+//ColoredPrintf creates than prints a new coloredstring using printf-like arguments
+//
+//- **Note:** Color based arguments must come before the printf arguments
+func ColoredPrintf(fStr string, formatArgs ...interface{}) error {
+
+	coloredString, err := NewFormattedStr(fStr, formatArgs...)
+	if err != nil {
+		return fmt.Errorf("coloredprintf: error creating coloredString: %v", err)
+	}
+
+	fmt.Print(coloredString.ColorString())
+
+	return nil
 }
 
 //Translates the raw []ColoredPart to a single formatted string
