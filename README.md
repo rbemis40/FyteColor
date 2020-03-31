@@ -8,7 +8,7 @@ This struct stores all of the information for printing either the raw string, or
   * String() : Simply returns the unformatted, raw string of a _ColoredString_
   * ColorString() : Returns the fully formatted _ColoredString_
 
-### Creating
+### Creating A ColoredString
 A _ColoredString_ can be created several ways, incuding:
   * NewColoredString(colorParts []ColoredPart) ColeredString : This takes an array of _ColoredParts_ to manually construct a _ColoredString_
   * NewFormattedString(fStr string, formatArgs ...interface{}) ColoredString : This takes a printf-style set of arguments, however the formatArgs has several differences a user __needs__ to be aware of:
@@ -19,7 +19,7 @@ A _ColoredString_ can be created several ways, incuding:
 
 ## ColoredPart
 A simple structure representing a part of a _ColoredString_
-### Creating
+### Creating A ColoredPart
 Although useful when using _NewColoredString_, this structure should otherwise be avoided in favor of _ColoredString_ methods when possible
 
 # Why did I create this?

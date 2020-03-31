@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	err := fytecolor.ColoredPrintf("$$Hello $$World!\n", fytecolor.BrightRed, fytecolor.BrightBlue)
+	err := fytecolor.ColoredPrintf("$$$$Hello World!\n", fytecolor.Underlined, fytecolor.BrightBlue)
 	if err != nil {
 		fmt.Printf("Error call ColoredPrintf: %v\n", err)
 	}

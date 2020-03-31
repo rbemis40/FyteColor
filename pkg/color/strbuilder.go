@@ -94,23 +94,31 @@ func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, err
 		return ColoredString{}, fmt.Errorf("not enough arguments passed to NewFormattedStr, only received %d", argLen)
 	}
 
+	/* Generate the ColoredParts needed to translate into fully formatted string */
 	colorPartSlice := make([]ColoredPart, 1, 3)
 	colorPartSlice[0] = ColoredPart{
 		PartString: partStr[0],
 	}
 
+	/* Loop through the string parts found above, and check if the corresponding argument is a color or a style. Then, construct a ColoredPart */
 	for i, curPartStr := range partStr[1:] {
-		t, ok := formatArgs[i].(color)
-		if !ok {
+		switch v := formatArgs[i].(type) {
+		case color:
+			colorPartSlice = append(colorPartSlice, ColoredPart{
+				PartColor:  v,
+				PartString: curPartStr,
+			})
+		case style:
+			colorPartSlice = append(colorPartSlice, ColoredPart{
+				PartStyle:  v,
+				PartString: curPartStr,
+			})
+		default:
 			return ColoredString{}, fmt.Errorf("argument %d of formatArgs was of the wrong type '%T' (hint: color arguments must be first)", i, formatArgs[i])
 		}
-
-		colorPartSlice = append(colorPartSlice, ColoredPart{
-			PartColor:  t,
-			PartString: curPartStr,
-		})
 	}
 
+	/* Create a new ColoredString and then format it with Sprintf */
 	partialColoredStr := NewColoredString(colorPartSlice)
 	partialColoredStr.formattedString = fmt.Sprintf(partialColoredStr.formattedString, formatArgs[len(partStr)-1:]...)
 
@@ -136,23 +144,25 @@ func ColoredPrintf(fStr string, formatArgs ...interface{}) error {
 func (cs *ColoredString) translateColorData() {
 	var colorString string = ""
 	for _, cp := range cs.coloredParts {
+
+		/* If the color code exists, find the string for it and use it, else continue using the last color */
 		ansiStr, ok := ColorMap[cp.PartColor]
 		if ok {
 			colorString += ansiStr
-		} else {
-			colorString += ColorMap[ColorDef]
 		}
 
+		/* If the style code exists, find the string for it and use it, else continue using the last style */
 		ansiStr, ok = StyleMap[cp.PartStyle]
 		if ok {
 			colorString += ansiStr
-		} else {
-			colorString += StyleMap[StyleDef]
 		}
 
 		colorString += cp.PartString
 	}
 
+	/* Ensure the colored string always resets the colors at the end */
 	colorString += ColorMap[ColorDef]
+	colorString += StyleMap[StyleDef]
+
 	cs.formattedString = colorString
 }
