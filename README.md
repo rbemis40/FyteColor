@@ -14,7 +14,6 @@ A _ColoredString_ can be created several ways, incuding:
   * NewFormattedString(fStr string, formatArgs ...interface{}) ColoredString : This takes a printf-style set of arguments, however the formatArgs has several differences a user __needs__ to be aware of:
     1. The format specifier used to denote a __color__ is `$$`, rather than `%$`, important to avoid errors during negation
     2. Any color format args __must__ be first in the formatArgs
-    3. Currently, __only__ colors are supported, __not__ styles
   * ColoredPrintf(fStr string, formatArgs ...interface{}) error : This directly prints the formatted _ColoredString_, rather than returning a _ColoredString_
 
 ## ColoredPart
