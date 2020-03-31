@@ -52,11 +52,11 @@ func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, err
 	var isNegated bool = false
 	var curString string = ""
 
-	const ColorSpecifier = "$$"
+	const FormatSpecifier = "$$"
 
 	partStr := make([]string, 0, 3)
 
-	for i := 0; i < len(fStr); { //Loop through the format string to detect ColorSpecifier
+	for i := 0; i < len(fStr); { //Loop through the format string to detect FormatSpecifier
 
 		if fStr[i] == '\\' { //Check if negation is needed
 			if isNegated { //If already negated, print the missed backslash, but keep negation
@@ -65,7 +65,7 @@ func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, err
 				isNegated = true
 			}
 		} else { //The current character is not negative
-			if len(fStr)-i >= 2 && fStr[i:i+2] == ColorSpecifier { //Before proceeding, check if the color code specifier is present
+			if len(fStr)-i >= 2 && fStr[i:i+2] == FormatSpecifier { //Before proceeding, check if the color code specifier is present
 				if isNegated { //If it is and negated, remove the negation and print the characters
 					isNegated = false
 				} else { //If not negated, store the previous characters, as they will be differently colored
@@ -75,8 +75,8 @@ func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, err
 					i += 2   //Since already found, skip pass the next two characters
 					continue //Dont add the characters to the new curString
 				}
-			} else { //The color specifier was not found
-				if isNegated { //If it is negated but not a color specifier, than set negation back to false and add the backslashe for later formatting
+			} else { //The format specifier was not found
+				if isNegated { //If it is negated but not a format specifier, than set negation back to false and add the backslashe for later formatting
 					isNegated = false
 					curString += "\\"
 				}
