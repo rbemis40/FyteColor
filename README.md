@@ -22,6 +22,6 @@ A simple structure representing a part of a _ColoredString_
 ### Creating
 Although useful when using _NewColoredString_, this structure should otherwise be avoided in favor of _ColoredString_ methods when possible
 
-#Why did I create this?
+# Why did I create this?
 I created this as just a side project for fun, and to help me learn the Go language (which is very nice). Because of this, _feel free_ to both use and edit it.
 
