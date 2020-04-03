@@ -4,21 +4,33 @@ import (
 	"fmt"
 )
 
-/*
-
 //FormattedPart represents a general part of a string
 type FormattedPart interface {
-	Color() color //Color returns the PartColor
-	Style() style //Style returns the PartStyle
-	String() string //String returns the PartString
+	Color() color      //Color returns the PartColor
+	Style() style      //Style returns the PartStyle
+	RawString() string //String returns the PartString
 }
-*/
 
 //ColoredPart represents a part of a ColoredString
 type ColoredPart struct {
 	PartColor  color
 	PartStyle  style
 	PartString string
+}
+
+//Color returns the ColoredPart color
+func (cp *ColoredPart) Color() color {
+	return cp.PartColor
+}
+
+//Style returns the ColoredPart style
+func (cp *ColoredPart) Style() style {
+	return cp.PartStyle
+}
+
+//RawString returns the ColoredPart string
+func (cp *ColoredPart) RawString() string {
+	return cp.PartString
 }
 
 //ColoredString represents a string with colored elements
