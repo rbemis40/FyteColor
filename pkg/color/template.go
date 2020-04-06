@@ -25,10 +25,18 @@ func (tp *TemplatePart) RawString() string {
 //TemplateString holds crucial data for templated strings
 type TemplateString struct {
 	formatParts []FormattedPart //Holds the formatted parts
+	stringSegs  []string        //Holds the constant formatted segments of the string
 }
 
 //NewTemplateString takes FormattedParts to return a fully formed TemplateString
 func NewTemplateString(formatParts []FormattedPart) TemplateString {
-	//TODO: Implement NewTemplate String
+	for _, curPart := range formatParts {
+		switch v := curPart.(type) {
+		case *TemplatePart:
+			continue
+		case *ColoredPart:
+			continue
+		}
+	}
 	return TemplateString{}
 }
