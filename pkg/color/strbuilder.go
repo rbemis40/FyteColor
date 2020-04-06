@@ -62,7 +62,7 @@ func NewColoredString(colorParts []ColoredPart) ColoredString {
 		coloredParts: colorParts,
 	}
 
-	newString.translateColorData()
+	newString.translate()
 
 	return newString
 }
@@ -163,28 +163,33 @@ func ColoredPrintf(fStr string, formatArgs ...interface{}) error {
 }
 
 //Translates the raw []ColoredPart to a single formatted string
-func (cs *ColoredString) translateColorData() {
+func (cs *ColoredString) translate() {
 	var colorString string = ""
 	for _, cp := range cs.coloredParts {
-
-		/* If the Color code exists, find the string for it and use it, else continue using the last Color */
-		ansiStr, ok := ColorMap[cp.PartColor]
-		if ok {
-			colorString += ansiStr
-		}
-
-		/* If the Style code exists, find the string for it and use it, else continue using the last Style */
-		ansiStr, ok = StyleMap[cp.PartStyle]
-		if ok {
-			colorString += ansiStr
-		}
-
-		colorString += cp.PartString
+		colorString += cp.translate() //Use the current color part and translate it into a usable string
 	}
 
-	/* Ensure the colored string always resets the colors at the end */
+	/* Ensure the colored string alwyas resets the colors at the end of the string */
 	colorString += ColorMap[DefColor]
 	colorString += StyleMap[DefStyle]
 
-	cs.formattedString = colorString
+	cs.formattedString = colorString //Set the formattedString to the newly created string
+}
+
+func (cp *ColoredPart) translate() string {
+	var colorString string = ""
+
+	/* If the Color code exists, find the string for it and use it, else continue using the last color */
+	ansiStr, ok := ColorMap[cp.PartColor]
+	if ok {
+		colorString += ansiStr
+	}
+
+	/* If the Style code exists, find the string for it and use it, else continue using the last style */
+	ansiStr, ok = StyleMap[cp.PartStyle]
+	if ok {
+		colorString += ansiStr
+	}
+
+	return colorString + cp.PartString
 }

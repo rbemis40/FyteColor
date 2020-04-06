@@ -23,9 +23,11 @@ func main() {
 	fmt.Println(colorString.String())
 	fmt.Println(colorString.ColorString())
 
+	fmt.Println("")
+
 	/* Construct a ColoredString using printf-like syntax */
 	colorString, err := fytecolor.NewFormattedStr(
-		"$$$$Hello $$World, And other things can be added, like %d\n",
+		"$$$$Using $$Printf-syntax, other things can be added, like %d\n",
 		fytecolor.Underlined,
 		fytecolor.BrightBlue,
 		fytecolor.BrightRed,
@@ -36,8 +38,8 @@ func main() {
 		return
 	}
 
+	fmt.Printf(colorString.ColorString())
 	fmt.Println(colorString.String())
-	fmt.Println(colorString.ColorString())
 
 	/* Or the printf syntax can be printed directly to the terminal */
 	/* Keep in mind that when using the printf syntax, color arguments MUST come first */
@@ -46,18 +48,51 @@ func main() {
 		fytecolor.Underlined,
 		fytecolor.BrightBlue,
 		fytecolor.BrightRed,
-		"Hello",
-		"World",
+		"Colored",
+		"Printf",
 	)
 	if err != nil {
 		fmt.Printf("Error printing ColoredString: %v\n", err)
 		return
 	}
 
+	fmt.Println("")
+
 	/* So this would cause an error */
 	err = fytecolor.ColoredPrintf("%d$$,%d\n", 10, fytecolor.BrightCyan, 10)
 	if err != nil {
 		fmt.Printf("Error printing ColoredString: %v\n", err)
+	}
+
+	/* Create a new colored TemplateString, allowing for sections of the string to be reused */
+	helloTemp := fytecolor.NewTemplateString([]fytecolor.FormattedPart{
+		&fytecolor.ColoredPart{
+			PartColor:  fytecolor.BrightRed,
+			PartStyle:  fytecolor.DefStyle,
+			PartString: "This is a template, where parts can be ",
+		},
+		&fytecolor.TemplatePart{
+			PartColor: fytecolor.BrightBlue,
+			PartStyle: fytecolor.DefStyle,
+		},
+	})
+
+	fmt.Println("")
+
+	/* Replace the TemplatePart with 'changed!' */
+	tempColorStr, err := helloTemp.ToColorString("changed!")
+	if err != nil {
+		fmt.Printf("Error converting helloTemp to string: %v\n", err)
 		return
 	}
+	fmt.Println(tempColorStr.ColorString())
+
+	/* Replace the TemplatePart with 'replaced!' */
+	tempColorStr, err = helloTemp.ToColorString("replaced!")
+	if err != nil {
+		fmt.Printf("Error converting helloTemp to string: %v\n", err)
+		return
+	}
+
+	fmt.Println(tempColorStr.ColorString())
 }
