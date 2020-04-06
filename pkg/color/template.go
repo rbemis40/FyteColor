@@ -2,18 +2,18 @@ package color
 
 //TemplatePart holds information about template parts
 type TemplatePart struct {
-	PartColor  color  //Stores the parts color
-	PartStyle  style  //Stores the parts style
+	PartColor  Color  //Stores the parts Color
+	PartStyle  Style  //Stores the parts Style
 	PartString string //Holds the string for the template
 }
 
-//Color returns the TemplatePart color
-func (tp *TemplatePart) Color() color {
+//Color returns the TemplatePart Color
+func (tp *TemplatePart) Color() Color {
 	return tp.PartColor
 }
 
-//Style returns the TemplatePart style
-func (tp *TemplatePart) Style() style {
+//Style returns the TemplatePart Style
+func (tp *TemplatePart) Style() Style {
 	return tp.PartStyle
 }
 
