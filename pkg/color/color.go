@@ -1,29 +1,29 @@
 package color
 
-type color int
+type Color int
 
 var (
-	ColorDef color = 1 //Begins at 1 to avoid 0 == nil during ColorString() translation
-	Black    color = ColorDef + 1
-	Red      color = Black + 1
-	Green    color = Red + 1
-	Yellow   color = Green + 1
-	Blue     color = Yellow + 1
-	Magenta  color = Blue + 1
-	Cyan     color = Magenta + 1
-	White    color = Cyan + 1
+	DefColor Color = 1 //Begins at 1 to avoid 0 == nil during ColorString() translation
+	Black    Color = DefColor + 1
+	Red      Color = Black + 1
+	Green    Color = Red + 1
+	Yellow   Color = Green + 1
+	Blue     Color = Yellow + 1
+	Magenta  Color = Blue + 1
+	Cyan     Color = Magenta + 1
+	White    Color = Cyan + 1
 
-	BrightBlack   color = White + 1
-	BrightRed     color = BrightBlack + 1
-	BrightGreen   color = BrightRed + 1
-	BrightYellow  color = BrightGreen + 1
-	BrightBlue    color = BrightYellow + 1
-	BrightMagenta color = BrightBlue + 1
-	BrightCyan    color = BrightMagenta + 1
-	BrightWhite   color = BrightCyan + 1
+	BrightBlack   Color = White + 1
+	BrightRed     Color = BrightBlack + 1
+	BrightGreen   Color = BrightRed + 1
+	BrightYellow  Color = BrightGreen + 1
+	BrightBlue    Color = BrightYellow + 1
+	BrightMagenta Color = BrightBlue + 1
+	BrightCyan    Color = BrightMagenta + 1
+	BrightWhite   Color = BrightCyan + 1
 
-	ColorMap map[color]string = map[color]string{
-		ColorDef:      "\033[39m",
+	ColorMap map[Color]string = map[Color]string{
+		DefColor:      "\033[39m",
 		Black:         "\033[30m",
 		Red:           "\033[31m",
 		Green:         "\033[32m",

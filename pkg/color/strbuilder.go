@@ -6,25 +6,25 @@ import (
 
 //FormattedPart represents a general part of a string
 type FormattedPart interface {
-	Color() color      //Color returns the PartColor
-	Style() style      //Style returns the PartStyle
+	Color() Color      //Color returns the PartColor
+	Style() Style      //Style returns the PartStyle
 	RawString() string //String returns the PartString
 }
 
 //ColoredPart represents a part of a ColoredString
 type ColoredPart struct {
-	PartColor  color
-	PartStyle  style
+	PartColor  Color
+	PartStyle  Style
 	PartString string
 }
 
-//Color returns the ColoredPart color
-func (cp *ColoredPart) Color() color {
+//Color returns the ColoredPart Color
+func (cp *ColoredPart) Color() Color {
 	return cp.PartColor
 }
 
-//Style returns the ColoredPart style
-func (cp *ColoredPart) Style() style {
+//Style returns the ColoredPart Style
+func (cp *ColoredPart) Style() Style {
 	return cp.PartStyle
 }
 
@@ -67,7 +67,7 @@ func NewColoredString(colorParts []ColoredPart) ColoredString {
 	return newString
 }
 
-//NewFormattedStr creates a colored string from a printf style string
+//NewFormattedStr creates a colored string from a printf Style string
 //
 //- **Note:** Color based arguments must come before printf arguments
 func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, error) {
@@ -83,11 +83,11 @@ func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, err
 		if fStr[i] == '\\' { //Check if negation is needed
 			if isNegated { //If already negated, print the missed backslash, but keep negation
 				curString += "\\"
-			} else { //If not already negated, set the negation to true, but don't print the backslash in case it is negating the color code
+			} else { //If not already negated, set the negation to true, but don't print the backslash in case it is negating the Color code
 				isNegated = true
 			}
 		} else { //The current character is not negative
-			if len(fStr)-i >= 2 && fStr[i:i+2] == FormatSpecifier { //Before proceeding, check if the color code specifier is present
+			if len(fStr)-i >= 2 && fStr[i:i+2] == FormatSpecifier { //Before proceeding, check if the Color code specifier is present
 				if isNegated { //If it is and negated, remove the negation and print the characters
 					isNegated = false
 				} else { //If not negated, store the previous characters, as they will be differently colored
@@ -122,21 +122,21 @@ func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, err
 		PartString: partStr[0],
 	}
 
-	/* Loop through the string parts found above, and check if the corresponding argument is a color or a style. Then, construct a ColoredPart */
+	/* Loop through the string parts found above, and check if the corresponding argument is a Color or a Style. Then, construct a ColoredPart */
 	for i, curPartStr := range partStr[1:] {
 		switch v := formatArgs[i].(type) {
-		case color:
+		case Color:
 			colorPartSlice = append(colorPartSlice, ColoredPart{
 				PartColor:  v,
 				PartString: curPartStr,
 			})
-		case style:
+		case Style:
 			colorPartSlice = append(colorPartSlice, ColoredPart{
 				PartStyle:  v,
 				PartString: curPartStr,
 			})
 		default:
-			return ColoredString{}, fmt.Errorf("argument %d of formatArgs was of the wrong type '%T' (hint: color arguments must be first)", i, formatArgs[i])
+			return ColoredString{}, fmt.Errorf("argument %d of formatArgs was of the wrong type '%T' (hint: Color arguments must be first)", i, formatArgs[i])
 		}
 	}
 
@@ -167,13 +167,13 @@ func (cs *ColoredString) translateColorData() {
 	var colorString string = ""
 	for _, cp := range cs.coloredParts {
 
-		/* If the color code exists, find the string for it and use it, else continue using the last color */
+		/* If the Color code exists, find the string for it and use it, else continue using the last Color */
 		ansiStr, ok := ColorMap[cp.PartColor]
 		if ok {
 			colorString += ansiStr
 		}
 
-		/* If the style code exists, find the string for it and use it, else continue using the last style */
+		/* If the Style code exists, find the string for it and use it, else continue using the last Style */
 		ansiStr, ok = StyleMap[cp.PartStyle]
 		if ok {
 			colorString += ansiStr
@@ -183,8 +183,8 @@ func (cs *ColoredString) translateColorData() {
 	}
 
 	/* Ensure the colored string always resets the colors at the end */
-	colorString += ColorMap[ColorDef]
-	colorString += StyleMap[StyleDef]
+	colorString += ColorMap[DefColor]
+	colorString += StyleMap[DefStyle]
 
 	cs.formattedString = colorString
 }
