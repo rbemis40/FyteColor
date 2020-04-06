@@ -1,5 +1,6 @@
 package color
 
+//Color represents a color option such as Black, Red, Green, or DefColor for the default color
 type Color int
 
 var (

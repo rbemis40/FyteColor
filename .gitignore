@@ -1,2 +1,2 @@
-makefile
-.idea
+#Ignore any Visual Studio Code Workspaces
+*.code-workspace
