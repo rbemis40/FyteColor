@@ -1,5 +1,5 @@
 # FyteColor
-A simple package capable of adding color to strings and output within seconds.
+A simple package capable of adding color and styling to strings for output within seconds.
 
 # Usage
 ## ColoredString

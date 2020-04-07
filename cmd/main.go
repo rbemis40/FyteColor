@@ -42,11 +42,13 @@ func main() {
 	fmt.Println(colorString.String())
 
 	/* Or the printf syntax can be printed directly to the terminal */
-	/* Keep in mind that when using the printf syntax, color arguments MUST come first */
+	/* Keep in mind that when using the printf syntax, color and style arguments MUST come first */
 	err = fytecolor.ColoredPrintf(
-		"$$$$%s $$%s!\n",
+		"$$$$$$%s$$ $$%s!\n",
+		fytecolor.BkgBrightWhite,
 		fytecolor.Underlined,
 		fytecolor.BrightBlue,
+		fytecolor.DefColor,
 		fytecolor.BrightRed,
 		"Colored",
 		"Printf",
