@@ -5,44 +5,43 @@ type Color int
 
 const (
 	/* Defines the various foreground colors, used in ColorMap */
-	_              = iota //Offset the values to begin at 1, prevents DefColor == nil in strbuilder
-	DefColor Color = iota
-	Black    Color = iota
-	Red      Color = iota
-	Green    Color = iota
-	Yellow   Color = iota
-	Blue     Color = iota
-	Magenta  Color = iota
-	Cyan     Color = iota
-	White    Color = iota
+	DefColor Color = iota + 1
+	Black
+	Red
+	Green
+	Yellow
+	Blue
+	Magenta
+	Cyan
+	White
 
-	BrightBlack   Color = iota
-	BrightRed     Color = iota
-	BrightGreen   Color = iota
-	BrightYellow  Color = iota
-	BrightBlue    Color = iota
-	BrightMagenta Color = iota
-	BrightCyan    Color = iota
-	BrightWhite   Color = iota
+	BrightBlack
+	BrightRed
+	BrightGreen
+	BrightYellow
+	BrightBlue
+	BrightMagenta
+	BrightCyan
+	BrightWhite
 
 	/* Defines the various background colors, used in ColorMap */
-	BkgBlack   Color = iota
-	BkgRed     Color = iota
-	BkgGreen   Color = iota
-	BkgYellow  Color = iota
-	BkgBlue    Color = iota
-	BkgMagenta Color = iota
-	BkgCyan    Color = iota
-	BkgWhite   Color = iota
+	BkgBlack
+	BkgRed
+	BkgGreen
+	BkgYellow
+	BkgBlue
+	BkgMagenta
+	BkgCyan
+	BkgWhite
 
-	BkgBrightBlack   Color = iota
-	BkgBrightRed     Color = iota
-	BkgBrightGreen   Color = iota
-	BkgBrightYellow  Color = iota
-	BkgBrightBlue    Color = iota
-	BkgBrightMagenta Color = iota
-	BkgBrightCyan    Color = iota
-	BkgBrightWhite   Color = iota
+	BkgBrightBlack
+	BkgBrightRed
+	BkgBrightGreen
+	BkgBrightYellow
+	BkgBrightBlue
+	BkgBrightMagenta
+	BkgBrightCyan
+	BkgBrightWhite
 )
 
 //ColorMap provides a map between a Color and its ANSI string value

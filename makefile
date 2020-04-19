@@ -1,4 +1,7 @@
-FyteColor : cmd/main.go
+default:
+	go build -o bin/macos/64/FyteColor cmd/main.go
+
+all:
 	env GOOS=darwin GOARCH=amd64 go build -o bin/macos/64/FyteColor cmd/main.go
 	env GOOS=darwin GOARCH=386 go build -o bin/macos/32/FyteColor cmd/main.go
 	env GOOS=windows GOARCH=amd64 go build -o bin/win/64/FyteColor.exe cmd/main.go

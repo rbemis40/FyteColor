@@ -4,10 +4,11 @@ package color
 type Style int
 
 const (
-	DefStyle   Style = 1 //Begins at 1 to avoid 0 == nil during translation in ColorString()
-	Bold       Style = DefStyle + 1
-	Italics    Style = Bold + 1
-	Underlined Style = Italics + 1
+	/* Defines the various styles that can be used */
+	DefStyle Style = iota + 1
+	Bold
+	Italics
+	Underlined
 )
 
 //StyleMap is used to find the ANSI code for each provided style
