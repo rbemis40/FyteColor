@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	fytecolor "github.com/TrashWithNoLid/FyteColor/pkg/color"
+	fytecolor "github.com/TrashWithNoLid/FyteColor/color"
 )
 
 func main() {
