@@ -6,8 +6,8 @@ import (
 )
 
 type Position struct {
-	x int
-	y int
+	X int
+	Y int
 }
 
 func SetCursorPos(newPos Position) error {
@@ -23,15 +23,15 @@ func SetCursorPos(newPos Position) error {
 		},
 	})
 
-	if newPos.x < 0 {
+	if newPos.X < 0 {
 		colorErrStr, _ := errStr.ToColorString("X value must be >= 0")
 		return errors.New(colorErrStr.String())
 	}
-	if newPos.y < 0 {
+	if newPos.Y < 0 {
 		colorErrStr, _ := errStr.ToColorString("Y value must be >= 0")
 		return errors.New(colorErrStr.String())
 	}
 
-	fmt.Printf("\033[%d;%dH", newPos.y, newPos.x)
+	fmt.Printf("\033[%d;%dH", newPos.Y, newPos.X)
 	return nil
 }

@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	fytecolor.SetCursorPos(fytecolor.Position{5, 5})
 	/* Construct a ColoredString manually using ColoredParts */
 	colorString := fytecolor.NewColoredString([]fytecolor.ColoredPart{
 		fytecolor.ColoredPart{
