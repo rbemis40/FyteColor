@@ -5,7 +5,12 @@ import (
 	"fmt"
 )
 
-func SetCursorPos(x, y int) error {
+type Position struct {
+	x int
+	y int
+}
+
+func SetCursorPos(newPos Position) error {
 	errStr := NewTemplateString([]FormattedPart{
 		&ColoredPart{
 			PartColor:  DefColor,
@@ -18,12 +23,15 @@ func SetCursorPos(x, y int) error {
 		},
 	})
 
-	if x < 0 {
+	if newPos.x < 0 {
 		colorErrStr, _ := errStr.ToColorString("X value must be >= 0")
-
+		return errors.New(colorErrStr.String())
+	}
+	if newPos.y < 0 {
+		colorErrStr, _ := errStr.ToColorString("Y value must be >= 0")
 		return errors.New(colorErrStr.String())
 	}
 
-	fmt.Printf("\033[%d;%dH", y, x)
+	fmt.Printf("\033[%d;%dH", newPos.y, newPos.x)
 	return nil
 }
