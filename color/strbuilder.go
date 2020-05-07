@@ -67,84 +67,85 @@ func NewColoredString(colorParts []ColoredPart) ColoredString {
 	return newString
 }
 
+func findNegation(searchStr string) bool {
+	if searchStr[0] == '\\' {
+		return true
+	}
+
+	return false
+}
+
+func findSpecifier(searchStr, specStr string) bool {
+	if len(searchStr) >= len(specStr) && searchStr[:len(specStr)] == specStr {
+		return true;
+	}
+
+	return false;
+}
+
 //NewFormattedStr creates a colored string from a printf Style string
 //
 //- **Note:** Color based arguments must come before printf arguments
 func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, error) {
 	var isNegated bool = false
-	var curString string = ""
+	var isSpecifier bool = false
 
-	const FormatSpecifier = "$$"
+	const ColorSpecifier = "$c"
+	var curPart ColoredPart = ColoredPart {
+		PartColor: DefColor,
+		PartStyle: DefStyle,
+		PartString: "",
+	}
+	var fullParts []ColoredPart = make([]ColoredPart, 0, 1)
 
-	partStr := make([]string, 0, 3)
+	for i := 0; i < len(fStr); i++ {
+		fmt.Printf("[%d] : isNegated: %t\n", i, isNegated)
 
-	for i := 0; i < len(fStr); { //Loop through the format string to detect FormatSpecifier
-
-		if fStr[i] == '\\' { //Check if negation is needed
-			if isNegated { //If already negated, print the missed backslash, but keep negation
-				curString += "\\"
-			} else { //If not already negated, set the negation to true, but don't print the backslash in case it is negating the Color code
-				isNegated = true
+		isSpecifier = findSpecifier(fStr[i:], ColorSpecifier)
+		if isSpecifier {
+			if isNegated {
+				
 			}
-		} else { //The current character is not negative
-			if len(fStr)-i >= 2 && fStr[i:i+2] == FormatSpecifier { //Before proceeding, check if the Color code specifier is present
-				if isNegated { //If it is and negated, remove the negation and print the characters
-					isNegated = false
-				} else { //If not negated, store the previous characters, as they will be differently colored
-					partStr = append(partStr, curString) //Add the current str to the slice, this is the part that will be uniquely colored
-					curString = ""                       //Reset the current string
-
-					i += 2   //Since already found, skip pass the next two characters
-					continue //Dont add the characters to the new curString
-				}
-			} else { //The format specifier was not found
-				if isNegated { //If it is negated but not a format specifier, than set negation back to false and add the backslashe for later formatting
-					isNegated = false
-					curString += "\\"
-				}
-			}
-
-			curString += string(fStr[i]) //Add the character to the current string
+		} else {
+			
 		}
 
-		i++ //Change the current string index
-	}
 
-	partStr = append(partStr, curString)
+		/*
+		if findNegation(fStr[i:]) {
+			isNegated = true
 
-	if argLen := len(formatArgs); argLen < len(partStr)-1 { //Subtract 1, as there is always at least one string
-		return ColoredString{}, fmt.Errorf("not enough arguments passed to NewFormattedStr, only received %d", argLen)
-	}
+			isSpecifier = findSpecifier(fStr[i+1:], ColorSpecifier)
+			if isSpecifier {
+				continue
+			}
+		} else {
+			isSpecifier = findSpecifier(fStr[i:], ColorSpecifier)
+			if isSpecifier && !isNegated{
+				fmt.Println(curPart.PartString)
+				fullParts = append(fullParts, curPart)
+				curPart = ColoredPart {
+					PartColor: DefColor,
+					PartStyle: DefStyle,
+					PartString: "",
+				}
 
-	/* Generate the ColoredParts needed to translate into fully formatted string */
-	colorPartSlice := make([]ColoredPart, 1, 3)
-	colorPartSlice[0] = ColoredPart{
-		PartString: partStr[0],
-	}
-
-	/* Loop through the string parts found above, and check if the corresponding argument is a Color or a Style. Then, construct a ColoredPart */
-	for i, curPartStr := range partStr[1:] {
-		switch v := formatArgs[i].(type) {
-		case Color:
-			colorPartSlice = append(colorPartSlice, ColoredPart{
-				PartColor:  v,
-				PartString: curPartStr,
-			})
-		case Style:
-			colorPartSlice = append(colorPartSlice, ColoredPart{
-				PartStyle:  v,
-				PartString: curPartStr,
-			})
-		default:
-			return ColoredString{}, fmt.Errorf("argument %d of formatArgs was of the wrong type '%T' (hint: Color arguments must be first)", i, formatArgs[i])
+				//Manually increment i to skip the rest of the characters in the colorspecifier
+				i += len(ColorSpecifier)-1
+				continue
+			}
 		}
+		isNegated = false
+		curPart.PartString += string(fStr[i])
+
+		*/
 	}
 
-	/* Create a new ColoredString and then format it with Sprintf */
-	partialColoredStr := NewColoredString(colorPartSlice)
-	partialColoredStr.formattedString = fmt.Sprintf(partialColoredStr.formattedString, formatArgs[len(partStr)-1:]...)
+	fullParts = append(fullParts, curPart)
+	fmt.Printf("FullPartLen: %d\n", len(fullParts))
 
-	return partialColoredStr, nil
+
+	return ColoredString{}, nil
 }
 
 //ColoredPrintf creates than prints a new coloredstring using printf-like arguments
