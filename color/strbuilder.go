@@ -107,7 +107,7 @@ func NewFormattedStr(fStr string, formatArgs ...interface{}) (ColoredString, err
 				
 			}
 		} else {
-			
+		
 		}
 
 
